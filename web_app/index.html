@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Міні-СУБД — веб-клієнт</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Міні-СУБД — веб-клієнт</h1>
+  <span id="connection-status">Підключення...</span>
+</header>
+
+<div class="layout">
+  <aside id="sidebar">
+    <h2>Таблиці бази</h2>
+    <ul id="table-list"></ul>
+    <button id="btn-create-table" class="btn btn-primary">+ Створити таблицю</button>
+    <button id="btn-drop-table" class="btn btn-danger">Знищити таблицю</button>
+    <button id="btn-intersect" class="btn btn-accent">Перетин таблиць</button>
+    <hr>
+    <button id="btn-save-db" class="btn">Зберегти базу</button>
+    <button id="btn-load-db" class="btn">Завантажити базу</button>
+  </aside>
+
+  <main>
+    <h2 id="current-table-title">Оберіть таблицю зліва</h2>
+    <div class="table-wrapper">
+      <table id="data-table">
+        <thead><tr id="table-head-row"></tr></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+    <div class="row-actions">
+      <button id="btn-add-row" class="btn btn-primary">Додати рядок</button>
+      <button id="btn-edit-row" class="btn">Редагувати обраний рядок</button>
+      <button id="btn-delete-row" class="btn btn-danger">Видалити обраний рядок</button>
+    </div>
+  </main>
+</div>
+
+<div id="status-bar">Готово</div>
+
+<!-- Модальне вікно: створення таблиці -->
+<div id="modal-create-table" class="modal hidden">
+  <div class="modal-content">
+    <h3>Створити таблицю</h3>
+    <label>Ім'я таблиці:
+      <input type="text" id="new-table-name" placeholder="напр. students">
+    </label>
+    <div id="columns-container"></div>
+    <button id="btn-add-column-row" class="btn btn-small">+ Додати колонку</button>
+    <div class="modal-actions">
+      <button id="btn-confirm-create-table" class="btn btn-primary">Створити</button>
+      <button id="btn-cancel-create-table" class="btn">Скасувати</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модальне вікно: рядок таблиці -->
+<div id="modal-row" class="modal hidden">
+  <div class="modal-content">
+    <h3 id="row-modal-title">Рядок таблиці</h3>
+    <div id="row-fields-container"></div>
+    <div class="modal-actions">
+      <button id="btn-confirm-row" class="btn btn-primary">Зберегти</button>
+      <button id="btn-cancel-row" class="btn">Скасувати</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модальне вікно: перетин таблиць -->
+<div id="modal-intersect" class="modal hidden">
+  <div class="modal-content">
+    <h3>Перетин таблиць</h3>
+    <label>Таблиця 1:
+      <select id="intersect-t1"></select>
+    </label>
+    <label>Таблиця 2:
+      <select id="intersect-t2"></select>
+    </label>
+    <div class="modal-actions">
+      <button id="btn-confirm-intersect" class="btn btn-accent">Виконати перетин</button>
+      <button id="btn-cancel-intersect" class="btn">Скасувати</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

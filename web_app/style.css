@@ -1,0 +1,280 @@
+/*
+  Тема: "консоль бази даних" — темна навігаційна панель (архів/картотека),
+  світла робоча область (аркуш), моноширинний шрифт для даних (бо це буквально
+  таблиці), акцент кольором лише для дій, які того варті:
+    - сталевий синій  — основні дії (створити, зберегти)
+    - бурштиновий     — індивідуальна операція варіанту (перетин таблиць) —
+                        навмисно виділена окремим кольором, бо це ключова
+                        функція, яку оцінює викладач
+    - глибокий рожево-червоний — деструктивні дії (знищити, видалити)
+*/
+
+:root {
+  --ink: #14213d;
+  --ink-soft: #1f2f52;
+  --paper: #f5f6f3;
+  --paper-line: #dde1de;
+  --text: #1b1f23;
+  --text-muted: #5b6470;
+  --accent: #2e6f95;
+  --accent-dark: #23566f;
+  --accent2: #c98a2c;
+  --accent2-dark: #a6711f;
+  --danger: #a3324a;
+  --danger-dark: #832841;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--text);
+  background: var(--paper);
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  background: var(--ink);
+  color: #fff;
+  padding: 14px 22px;
+  border-bottom: 3px solid var(--accent2);
+}
+
+header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.2px;
+}
+
+#connection-status {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #b9c2d6;
+}
+
+#connection-status.connected { color: #8fd19e; }
+#connection-status.error { color: #e79aa8; }
+
+.layout {
+  display: flex;
+  min-height: calc(100vh - 52px);
+}
+
+#sidebar {
+  width: 240px;
+  background: var(--ink-soft);
+  color: #e7eaf2;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#sidebar h2 {
+  font-size: 12px;
+  text-transform: none;
+  color: #a9b4c9;
+  margin: 0 0 6px 2px;
+  font-weight: 600;
+}
+
+#table-list {
+  list-style: none;
+  margin: 0 0 10px 0;
+  padding: 0;
+  border: 1px solid #33436b;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #16223f;
+  min-height: 120px;
+}
+
+#table-list li {
+  padding: 8px 10px;
+  font-family: var(--mono);
+  font-size: 13px;
+  cursor: pointer;
+  border-bottom: 1px solid #243357;
+}
+
+#table-list li:last-child { border-bottom: none; }
+#table-list li:hover { background: #223154; }
+#table-list li.selected { background: var(--accent); color: #fff; }
+
+#sidebar hr {
+  border: none;
+  border-top: 1px solid #33436b;
+  margin: 10px 0;
+}
+
+.btn {
+  font-family: var(--sans);
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 3px;
+  border: 1px solid var(--paper-line);
+  background: #fff;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.btn:hover { filter: brightness(0.97); }
+.btn:active { transform: translateY(1px); }
+
+.btn-primary { background: var(--accent); border-color: var(--accent-dark); color: #fff; }
+.btn-primary:hover { background: var(--accent-dark); }
+
+.btn-accent { background: var(--accent2); border-color: var(--accent2-dark); color: #241a06; font-weight: 600; }
+.btn-accent:hover { background: var(--accent2-dark); color: #fff; }
+
+.btn-danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+.btn-danger:hover { background: var(--danger); color: #fff; }
+
+.btn-small { padding: 5px 9px; font-size: 12px; align-self: flex-start; }
+
+#sidebar .btn { width: 100%; }
+
+main {
+  flex: 1;
+  padding: 22px 28px;
+}
+
+#current-table-title {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 14px 0;
+  border-bottom: 1px solid var(--paper-line);
+  padding-bottom: 10px;
+}
+
+.table-wrapper {
+  border: 1px solid var(--paper-line);
+  border-radius: 3px;
+  overflow: auto;
+  background: #fff;
+  max-height: 55vh;
+}
+
+#data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+#data-table thead th {
+  text-align: left;
+  background: #eef1f0;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--paper-line);
+  color: var(--text);
+  position: sticky;
+  top: 0;
+}
+
+#data-table tbody td {
+  padding: 7px 12px;
+  border-bottom: 1px solid #eef0ee;
+}
+
+#data-table tbody tr:hover { background: #f7f9f6; }
+#data-table tbody tr.selected { background: #e4eef4; }
+
+.row-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+}
+
+#status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--ink);
+  color: #cfd6e4;
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 6px 16px;
+}
+
+/* ---------- Модальні вікна ---------- */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 33, 61, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal.hidden { display: none; }
+
+.modal-content {
+  background: #fff;
+  padding: 22px 24px;
+  border-radius: 4px;
+  width: 380px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.modal-content h3 {
+  margin: 0 0 14px 0;
+  font-size: 16px;
+}
+
+.modal-content label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.modal-content input[type="text"],
+.modal-content select {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 7px 9px;
+  border: 1px solid var(--paper-line);
+  border-radius: 3px;
+  font-family: var(--sans);
+  font-size: 13px;
+}
+
+#columns-container .column-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+#columns-container .column-row input { flex: 2; }
+#columns-container .column-row select { flex: 1; }
+
+.modal-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.field-error {
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: -6px;
+  margin-bottom: 8px;
+}
